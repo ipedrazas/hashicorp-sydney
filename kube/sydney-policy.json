@@ -1,0 +1,11 @@
+path "sys/*" {
+  policy = "deny"
+}
+
+path "secret/demo/*" {
+  policy = "read"
+}
+
+path mysql/creds/sydney {
+	capabilities = ["read", "list"]
+}

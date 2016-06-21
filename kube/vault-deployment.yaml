@@ -26,6 +26,7 @@ spec:
     spec:
       containers:
       - image: ipedrazas/vault:sydney
+        imagePullPolicy: Always
         name: vault        
         ports:
         - containerPort: 9000

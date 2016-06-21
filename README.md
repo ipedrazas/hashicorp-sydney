@@ -86,14 +86,17 @@ Mount and initialise the `MySQL` backend
 	vault mount mysql
 	vault write mysql/config/connection connection_url="root:Hell0Sydney!@tcp(mysql:3306)/"
 	vault write mysql/roles/sydney \
-    sql="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON *.* TO '{{name}}'@'%';"
+    sql="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT, INSERT ON *.* TO '{{name}}'@'%';"
+    vault write mysql/roles/all \
+    sql="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT ALL ON *.* TO '{{name}}'@'%';"
 
 
 to test is we can generate users, we can issue the following command:
 
 	vault read mysql/creds/sydney
 
-If everything worked fine so far, let's look at how all this coukld work in kubernetes. We're going to launch an app that needs access to a secret, 
+If everything worked fine so far, let's look at how all this could work in kubernetes. We're going to launch an app that needs access to a secret and queries the Mysql database to fetch some data.
+
 
 
 # Docker images

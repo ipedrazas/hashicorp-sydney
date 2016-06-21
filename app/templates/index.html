@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Hashicorp Sydney Meetup</title>
+   
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+   
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Messaging Messages</h3>
+        <ul class=entries>
+          {% for message in messages %}
+            <li><h2>{{ message }}</h2>
+          {% else %}
+            <li><em>Unbelievable.  No messages here so far</em>
+          {% endfor %}
+          </ul>
+      </div>
+
+ <div class="jumbotron">
+        <h1>Message App</h1>
+                    
+            <form method="post" action="/messages" enctype="multipart/form-data">
+              <div class="form-group">
+                <input type="text" class="form-control" name="message" placeholder="Message">
+              </div>
+              <button type="submit" class="btn btn-lg btn-success">Send!</button>
+            </form>
+
+      </div>
+      
+
+      <footer class="footer">
+        <p>&copy; G'Day! 2016</p>
+      </footer>
+
+    </div>
+  </body>
+</html>

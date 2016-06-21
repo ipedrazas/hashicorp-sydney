@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: mysql
+  name: mysql-client
+spec:
+  containers:
+  - name: mysql-client
+    image: mysql
+    command: ["bash", "-c", "while true; do sleep 10; done"]
+    imagePullPolicy: IfNotPresent

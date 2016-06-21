@@ -5,12 +5,10 @@ metadata:
   labels:
     app: vault
 spec:
-  type: LoadBalancer
   ports:
     - port: 9000
   selector:
     app: vault
-  clusterIP: None
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -27,7 +25,7 @@ spec:
         app: vault        
     spec:
       containers:
-      - image: ipedrazas/vault
+      - image: ipedrazas/vault:sydney
         name: vault        
         ports:
         - containerPort: 9000

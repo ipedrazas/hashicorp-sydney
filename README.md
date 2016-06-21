@@ -19,8 +19,9 @@ First things we need to do is to create a kubernetes cluster if you don't have o
 
 Let's deploy a MySQL database first using Kubernetes Secrets:
 
+	echo -n "Hell0Sydney!" > password.txt
 	kubectl create secret generic mysql-pass --from-file=password.txt
-
+	kubectl create -f mysql-deploy.yaml
 
 
 Once we have the cluster up and running we have to deploy Vault. 
@@ -37,13 +38,13 @@ Vault will start in `dev` mode, this means that our vault has been unsealed, so 
 We can see that the token is printed as part of the logs. Now, we have to access that Vault and create our policy:
 
 	kubectl exec -it VAULT_POD_NAME sh
-	export VAUL_ADDR=http://127.0.0.1:9000
+	export VAULT_ADDR=http://127.0.0.1:9000
 	export VAULT_TOKEN=COPY_THE_TOKEN_FROM_THE_LOGS
 	vault status
 
-To create the policy `sydney-policy.json`, we're going to create a file
+To create the policy `sydney-policy.json`, we're going to use a file located in the container in `/etc/policy.json`
 
-	cat policy.json <<EOF
+	
 	path "sys/*" {
 	  policy = "deny"
 	}
@@ -55,12 +56,11 @@ To create the policy `sydney-policy.json`, we're going to create a file
 	path "mysql/creds/sydney" {
 		capabilities = ["read", "list"]
 	}
-	EOF
 	
 
 Define the policy and generate a new token
 
-	vault policy-write sydney policy.json
+	vault policy-write sydney /etc/policy.json
 	vault token-create -policy=sydney
 
 This will generate a new token, that it's the one we will use for our namespace.
@@ -74,18 +74,26 @@ Let's test
 	
 	vault read secret/sydney
 
+Let's exit the container and create a secret for our namespace:
+
+	echo -n "81cf6a88-f71f-fda8-9f4b-2019c105bb3d" > token
+	kubectl create secret generic vault --from-file=token
+
+Once we have the Vault token in our secret, let's create a backend. What we want is to delegate on Vault the responsibility of managing the access to the database.
+
 Mount and initialise the `MySQL` backend
 
 	vault mount mysql
-	MYSQL_PASSWORD=$(cat password.txt)
-	vault write mysql/config/conection connection_url="root:$MYSQL_PASSWORD@tcp(mysql:3306"
+	vault write mysql/config/connection connection_url="root:Hell0Sydney!@tcp(mysql:3306)/"
 	vault write mysql/roles/sydney \
-		sql="CREATE USER '{{name}}'@'%' IDENTIFIED_BY '{{password}}'; GRANT ALL PRIVILEGES on sydney.* TO '{{name}}'@'%';"
+    sql="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON *.* TO '{{name}}'@'%';"
 
-Let's test that everything works as expected:
-	
+
+to test is we can generate users, we can issue the following command:
+
 	vault read mysql/creds/sydney
 
+If everything worked fine so far, let's look at how all this coukld work in kubernetes. We're going to launch an app that needs access to a secret, 
 
 
 # Docker images

@@ -6,6 +6,6 @@ path "secret/demo/*" {
   policy = "read"
 }
 
-path mysql/creds/sydney {
+path "mysql/creds/sydney" {
 	capabilities = ["read", "list"]
 }

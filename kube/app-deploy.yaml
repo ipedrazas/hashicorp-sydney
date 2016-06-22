@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: meetup
+  name: meetup
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: meetup
+    spec:
+      containers:
+      - name: meetup
+        image: ipedrazas/meetup:sydney
+        imagePullPolicy: Always
+        volumeMounts:
+             - name: credentials-from-vault
+               mountPath: /credentials
+      - name: vault-helper
+        image: ipedrazas/vault-helper:latest
+        imagePullPolicy: Always
+        volumeMounts:
+             - name: credentials-from-vault
+               mountPath: /credentials
+        env:
+          - name: KEY
+            value: secret/sydney
+          - name: VAULT_ADDR
+            value: vault:9000
+          - name: VAULT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: vault
+                key: token
+      volumes:
+        - name: credentials-from-vault
+          emptyDir: {}

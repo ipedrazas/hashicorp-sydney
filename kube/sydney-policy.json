@@ -2,7 +2,7 @@ path "sys/*" {
   policy = "deny"
 }
 
-path "secret/demo/*" {
+path "secret/sydney/*" {
   policy = "read"
 }
 

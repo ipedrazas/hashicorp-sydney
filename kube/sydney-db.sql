@@ -1,8 +1,14 @@
-create database sydney;
+CREATE DATABASE sydney;
 
-CREATE TABLE Messages
+USE sydney;
+
+CREATE TABLE messages
 (
-ID int NOT NULL AUTO_INCREMENT,
-Message varchar(255) NOT NULL,
+id int NOT NULL AUTO_INCREMENT,
+message varchar(255) NOT NULL,
 PRIMARY KEY (ID)
 );
+
+INSERT INTO messages (message) VALUES('Hello There!');
+INSERT INTO messages (message) VALUES('Hola!');
+INSERT INTO messages (message) VALUES('G\'day');

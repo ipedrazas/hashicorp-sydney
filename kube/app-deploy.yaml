@@ -20,22 +20,23 @@ spec:
         volumeMounts:
              - name: credentials-from-vault
                mountPath: /credentials
-      - name: vault-helper
-        image: ipedrazas/vault-helper:latest
-        imagePullPolicy: Always
-        volumeMounts:
-             - name: credentials-from-vault
-               mountPath: /credentials
+
+      - name: vault-side-kick
+        image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.9-2
+        args:
+          - -output=/credentials
+          - -cn=secret:secret/sydney:file=app.json
         env:
-          - name: KEY
-            value: secret/sydney
           - name: VAULT_ADDR
-            value: vault:9000
+            value: http://vault:9000
           - name: VAULT_TOKEN
             valueFrom:
               secretKeyRef:
                 name: vault
                 key: token
+        volumeMounts:
+          - name: credentials-from-vault
+            mountPath: /credentials
       volumes:
         - name: credentials-from-vault
           emptyDir: {}

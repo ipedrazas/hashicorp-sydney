@@ -31,6 +31,7 @@ def list_messages():
         with open(vault_data) as data_file:
             response = json.load(data_file)
             app.logger.debug(response)
+            secret = response['password']
     messages = []
     try:
         conn = mysql.connect()
@@ -38,6 +39,8 @@ def list_messages():
         cursor.execute("SELECT * from sydney.messages")
         rows = cursor.fetchall()
         for id,value in rows:
+            if value == secret:
+                value = "SECRET FOUND! " + value
             messages.append(value)
         return render_template('index.html', messages=messages)
 

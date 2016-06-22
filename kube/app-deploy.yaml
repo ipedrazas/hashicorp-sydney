@@ -33,7 +33,7 @@ spec:
         image: quay.io/ukhomeofficedigital/vault-sidekick:v0.0.9-2
         args:
           - -output=/credentials
-          - -cn=secret:secret/sydney:file=app.json
+          - -cn=secret:secret/sydney:fmt=json:file=app.json
         env:
           - name: VAULT_ADDR
             value: http://vault:9000

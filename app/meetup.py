@@ -23,6 +23,13 @@ mysql.init_app(app)
 
 @app.route('/', methods=['GET'])
 def list_messages():
+    vault_data = '/credentials/app.json'
+    data = {'msg': 'Vault token is not valid'}
+
+    if os.path.isfile(vault_data):
+        with open(vault_data) as data_file:
+            response = json.load(data_file)
+            app.logger.debug(response)
     messages = []
     try:
         conn = mysql.connect()

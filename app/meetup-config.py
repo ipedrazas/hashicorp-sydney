@@ -1,17 +1,11 @@
 from flask import Flask, render_template, request, redirect
 from flaskext.mysql import MySQL
 import os
-import hvac
 
 app = Flask(__name__)
 
 mysql = MySQL()
 
-vault_token = os.environ.get('VAULT_TOKEN')
-client = hvac.Client(url='http://vault:9000', token=vault_token)
-mysql_credentials = client.read('mysql/creds/all')
-
-credentials = mysql_credentials['data']
 
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = credentials['username']

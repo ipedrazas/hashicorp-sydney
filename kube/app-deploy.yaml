@@ -17,6 +17,14 @@ spec:
       - name: meetup
         image: ipedrazas/meetup:sydney
         imagePullPolicy: Always
+        env:
+          - name: VAULT_ADDR
+            value: http://vault:9000
+          - name: VAULT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: vault
+                key: token
         volumeMounts:
              - name: credentials-from-vault
                mountPath: /credentials

@@ -52,7 +52,7 @@ Vault will start in `dev` mode, this means that our vault has been unsealed, so 
 
 You should see something like this:
 
-	ipedrazas@kube-1330:~/hashicorp-sydney/kube$ klogs vault-1525384569-tdbkj
+	ipedrazas@kube-1330:~$ kubectl logs vault-1525384569-tdbkj
 	==> WARNING: Dev mode is enabled!
 
 	In this mode, Vault is completely in-memory and unsealed.
@@ -113,7 +113,7 @@ To create the policy `sydney-policy.json`, we're going to use a file located in 
 	}
 
 	path "secret/sydney/*" {
-	  policy = "read"
+	  policy = "write"
 	}
 
 	path "mysql/creds/sydney" {
